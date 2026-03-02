@@ -18,7 +18,6 @@
     flex-direction: column;
   }
 
-  /* TOPBAR */
   #topbar {
     height: 48px;
     background: #161b22;
@@ -107,7 +106,6 @@
   .panel-body::-webkit-scrollbar { width: 4px; }
   .panel-body::-webkit-scrollbar-thumb { background: #30363d; }
 
-  /* STAT CARDS */
   .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
   .stat-card {
     background: #161b22;
@@ -130,7 +128,6 @@
   .sc-val.pink { color: #bc8cff; }
   .sc-sub { font-size: 10px; color: #6e7681; }
 
-  /* BARRAS */
   .section-title {
     padding: 8px 12px 4px;
     font-size: 10px;
@@ -145,7 +142,6 @@
   .bar-track { height: 4px; background: #21262d; border-radius: 2px; }
   .bar-fill  { height: 4px; border-radius: 2px; }
 
-  /* ORIGENS */
   .orig-row {
     display: flex; align-items: center; gap: 8px;
     padding: 4px 12px;
@@ -156,7 +152,6 @@
   .orig-name { flex: 1; font-size: 11px; color: #8b949e; }
   .orig-count { font-family: monospace; font-size: 11px; color: #f85149; }
 
-  /* MAP */
   #center-panel { position: relative; }
   #map-header {
     padding: 6px 12px;
@@ -176,7 +171,6 @@
   #map { flex: 1; }
   .leaflet-container { background: #0d1117 !important; }
 
-  /* LEGENDA */
   #map-legend {
     position: absolute; bottom: 36px; left: 10px; z-index: 500;
     background: rgba(22,27,34,.9);
@@ -188,7 +182,6 @@
   .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
   .leg-label { font-size: 10px; color: #8b949e; }
 
-  /* TICKER */
   #ticker {
     height: 28px;
     background: #161b22;
@@ -213,7 +206,6 @@
   .tick-high { color: #e3b341; }
   .tick-low  { color: #3fb950; }
 
-  /* FEED */
   .feed-item {
     padding: 7px 12px;
     border-bottom: 1px solid #161b22;
@@ -233,12 +225,10 @@
   .feed-type { font-size: 11px; font-weight: bold; color: #c9d1d9; }
   .feed-detail { font-size: 10px; font-family: monospace; color: #6e7681; margin-top: 1px; }
 
-  /* CHART */
   .chart-block { padding: 8px 12px; flex-shrink: 0; border-top: 1px solid #21262d; }
   .chart-label { font-size: 10px; color: #6e7681; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .chart-wrap  { height: 110px; }
 
-  /* POPUP */
   .leaflet-popup-content-wrapper {
     background: #161b22 !important;
     border: 1px solid #30363d !important;
@@ -252,7 +242,6 @@
   .popup-key { color: #6e7681; }
   .popup-val { color: #c9d1d9; }
 
-  /* MARKER */
   .mk { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); }
   .mk.crit { background: #f85149; }
   .mk.high { background: #e3b341; }
@@ -260,7 +249,6 @@
   .mk.low  { background: #3fb950; }
   .mk.hp   { background: #58a6ff; }
 
-  /* MODAL LOGIN */
   #modal-bg {
     display: none; position: fixed; inset: 0; z-index: 9999;
     background: rgba(0,0,0,.7);
@@ -313,7 +301,6 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div id="topbar">
   <div class="logo">Cybex<span>Node</span> BR</div>
   <div class="divider"></div>
@@ -354,7 +341,6 @@
   </div>
 </div>
 
-<!-- MODAL DE LOGIN -->
 <div id="modal-bg">
   <div id="modal-box">
     <button id="modal-close" onclick="closeModal()">✕</button>
@@ -373,10 +359,8 @@
   </div>
 </div>
 
-<!-- MAIN -->
 <div id="main">
 
-  <!-- PAINEL ESQUERDO -->
   <div class="panel">
     <div class="panel-title">Métricas</div>
     <div class="panel-body">
@@ -457,7 +441,6 @@
     </div>
   </div>
 
-  <!-- MAPA -->
   <div class="panel" id="center-panel" style="position:relative;display:flex;flex-direction:column;">
     <div id="map-header">
       <span>🇧🇷 Mapa de Ataques — Brasil</span>
@@ -483,7 +466,6 @@
     </div>
   </div>
 
-  <!-- PAINEL DIREITO -->
   <div class="panel">
     <div class="panel-title">Incidentes Recentes</div>
     <div class="panel-body" id="feed-body"></div>
@@ -496,20 +478,17 @@
 </div>
 
 <script>
-// RELÓGIO
 function tick() {
   document.getElementById('clock').textContent =
     new Date().toLocaleTimeString('pt-BR', {hour12:false}) + ' BRT';
 }
 setInterval(tick, 1000); tick();
 
-// MAPA
 const map = L.map('map', { center: [-14.2, -51.9], zoom: 4, zoomControl: true });
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '© OpenStreetMap, © CARTO', maxZoom: 18
 }).addTo(map);
 
-// Contorno do Brasil — cascata de fontes
 async function loadBorder() {
   const style = { color:'#1a6aa0', weight:1.5, opacity:.9, fillColor:'#051525', fillOpacity:.4 };
   try {
@@ -528,7 +507,6 @@ async function loadBorder() {
 }
 loadBorder();
 
-// MARCADORES
 const attacks = [
   {lat:-23.55,lng:-46.63, city:"São Paulo/SP",    type:"DDoS UDP Flood",      sev:"critical", src:"45.155.91.7",    dst:"200.145.12.88",  port:80,   country:"Rússia"},
   {lat:-22.90,lng:-43.17, city:"Rio de Janeiro/RJ",type:"Brute Force RDP",    sev:"critical", src:"45.66.209.10",   dst:"179.108.55.3",   port:3389, country:"Holanda"},
@@ -545,8 +523,8 @@ const attacks = [
   {lat:-1.46, lng:-48.50, city:"Belém/PA",        type:"Port Scan",           sev:"low",      src:"194.61.24.99",   dst:"200.152.44.3",   port:0,    country:"China"},
   {lat:-3.10, lng:-60.02, city:"Manaus/AM",       type:"Brute Force SSH",     sev:"high",     src:"45.155.204.23",  dst:"177.134.2.8",    port:22,   country:"China"},
   {lat:-10.21,lng:-48.36, city:"Palmas/TO",       type:"Exploit CVE-2024-0519",sev:"high",    src:"89.185.24.8",    dst:"177.33.4.12",    port:9090, country:"Índia"},
-  // Honeypots
-  {lat:-23.54,lng:-46.65, city:"Honeypot — São Paulo", type:"Cowrie SSH Trap", sev:"hp", src:"múltiplos IPs", dst:"177.100.0.1", port:22, country:"—"},
+
+ {lat:-23.54,lng:-46.65, city:"Honeypot — São Paulo", type:"Cowrie SSH Trap", sev:"hp", src:"múltiplos IPs", dst:"177.100.0.1", port:22, country:"—"},
   {lat:-8.06, lng:-34.89, city:"Honeypot — Recife",    type:"Cowrie SSH Trap", sev:"hp", src:"múltiplos IPs", dst:"200.202.0.1", port:22, country:"—"},
 ];
 
@@ -571,7 +549,6 @@ attacks.forEach(a => {
     </div>`, {maxWidth:240}).addTo(map);
 });
 
-// ARCOS
 [[[-23.55,-46.63],[-22.90,-43.17],'critical'],
  [[-22.90,-43.17],[-15.77,-47.92],'high'],
  [[-30.03,-51.22],[-23.55,-46.63],'medium'],
@@ -582,7 +559,6 @@ attacks.forEach(a => {
   L.polyline([a,b], {color: sevColor[s], weight:1, opacity:.3, dashArray:'4 6'}).addTo(map);
 });
 
-// FEED
 const incidents = [
   {sev:'critical', type:'DDoS UDP Flood',       detail:'45.155.91.7 → 200.145.12.88:80',    time:'agora'},
   {sev:'critical', type:'Brute Force RDP',       detail:'45.66.209.10 → 179.108.55.3:3389',  time:'1min'},
@@ -611,7 +587,6 @@ incidents.forEach(i => {
     </div>`;
 });
 
-// TICKER
 const ticks = [
   {cls:'tick-crit', txt:'[CRÍTICO] DDoS UDP 45.155.91.7 → São Paulo/SP — 48Gbps'},
   {cls:'tick-high', txt:'[ALTO] Brute Force SSH 185.196.8.199 → Fortaleza/CE — 4.200 tentativas'},
@@ -626,7 +601,6 @@ const ti = document.getElementById('ticker-inner');
   ti.innerHTML += `<span class="tick-item"><span class="${t.cls}">${t.txt}</span> &nbsp;|&nbsp; </span>`;
 });
 
-// GRÁFICO
 new Chart(document.getElementById('chart'), {
   type: 'line',
   data: {
@@ -651,7 +625,6 @@ new Chart(document.getElementById('chart'), {
   }
 });
 
-// CONTADORES LIVE
 let total=182419, ips=24881, crits=12, apm=347;
 setInterval(() => {
   total += Math.floor(Math.random()*12)+3;
@@ -666,7 +639,6 @@ setInterval(() => {
   document.getElementById('cnt-high').textContent  = (8834+Math.floor((Math.random()-.5)*40)).toLocaleString('pt-BR');
 }, 1800);
 
-// FILTROS
 document.querySelectorAll('.fpill').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.fpill').forEach(x => x.classList.remove('active'));
   b.classList.add('active');
@@ -677,7 +649,6 @@ document.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () =>
   b.classList.add('active');
 }));
 
-// LOGIN
 const USERS = {
   admin:    { pass:'admin123',    role:'Administrador' },
   analista: { pass:'analista123', role:'Analista' },

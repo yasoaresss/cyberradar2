@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ CybexNode
 
-## Getting Started
+**CybexNode** é uma plataforma de **monitoramento de ameaças cibernéticas em tempo real focada no Brasil**.  
+Ela agrega dados de múltiplas fontes de **Threat Intelligence** e apresenta tudo em um **dashboard interativo com mapa, gráficos e feed ao vivo**.
 
-First, run the development server:
+# 📊 Arquitetura do Projeto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+CybexNode.Api → ASP.NET Core Web API + SignalR
+CybexNode.Worker → Background Workers de Threat Intelligence
+cybexnode-frontend → Dashboard Next.js (React + Leaflet + Chart.js)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 🚀 Funcionalidades
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🗺️ **Mapa interativo do Brasil** com marcadores de ataques em tempo real por severidade  
+- ⚡ **Feed ao vivo** via SignalR — incidentes chegam sem refresh  
+- 📈 **Estatísticas em tempo real**
+  - ataques por minuto
+  - total de IPs únicos
+  - países de origem
+  - distribuição por severidade  
+- 📍 **Drawer por estado** com detalhes:
+  - tipos de ataque
+  - top IPs
+  - atividade por hora  
+- 🧬 **Integração com CVEs** via **CISA KEV**  
+- 🔑 **Autenticação por API Key** (`X-Api-Key`) para sensores honeypot  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 🧠 Fontes de Threat Intelligence
 
-## Learn More
+| Worker | Fonte | Intervalo |
+|------|------|------|
+| `AbuseIpDbWorker` | AbuseIPDB (IPs maliciosos reportados) | 24h |
+| `CisaWorker` | CISA KEV (vulnerabilidades exploradas ativamente) | 24h |
+| `DShieldWorker` | DShield / SANS (top IPs atacantes) | 1h |
+| `FeodoWorker` | Feodo Tracker (C2 botnet) | 6h |
+| `GreyNoiseWorker` | GreyNoise (internet scanners / noise) | 6h |
+| `HoneyDbWorker` | HoneyDB (atividade de honeypots) | 12h |
+| `OtxWorker` | AlienVault OTX (threat intelligence) | 6h |
 
-To learn more about Next.js, take a look at the following resources:
+# 🏗️ Stack Tecnológica
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **ASP.NET Core 8 (C#)**
+- **Entity Framework Core**
+- **SQL Server**
+- **SignalR** (tempo real)
+- **MaxMind GeoIP2** (geolocalização de IP)
 
-## Deploy on Vercel
+## Frontend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Next.js 14**
+- **TypeScript**
+- **React-Leaflet** (mapa interativo)
+- **Chart.js** (gráficos)
+- **TailwindCSS**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# ☁️ Infraestrutura
+
+| Serviço | Função |
+|------|------|
+| **Azure App Service** | API Backend |
+| **Azure WebJob** | Workers de coleta de inteligência |
+| **Azure Static Web Apps** | Frontend |
+| **Azure SQL Database** | Banco de dados |
+
+# 🔌 Integração com Sensores
+
+Sensores ou honeypots podem enviar eventos usando:
+
+POST /api/events
+
+Header obrigatório:
+X-Api-Key: SUA_API_KEY
+
+# 📡 Tempo Real
+
+A plataforma usa **SignalR** para enviar novos incidentes ao dashboard instantaneamente.
+
+Eventos recebidos incluem:
+
+- Novo ataque detectado
+- Atualização de estatísticas
+- Novos IPs maliciosos
